@@ -40,10 +40,8 @@ Before you begin, make sure you have the following installed:
 Open a terminal (or the VS Code integrated terminal) and run:
 
 ```bash
-git clone https://github.com/YOUR_ORG/cnx-holdTimer.git
+git clone https://github.com/kadammmmm/cnx-holdTimer.git
 ```
-
-> Replace `YOUR_ORG/cnx-holdTimer` with the actual GitHub repository URL.
 
 ### Step 2: Open in VS Code
 
