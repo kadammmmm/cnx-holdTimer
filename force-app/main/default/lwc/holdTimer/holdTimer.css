@@ -1,0 +1,299 @@
+/* ── b+s Brand Tokens ──────────────────────────────────────────────── */
+:host {
+    --bss-navy: #0b2d4f;
+    --bss-navy-light: #133d6b;
+    --bss-accent: #d32f2f;
+    --bss-accent-light: #e53935;
+    --bss-white: #ffffff;
+    --bss-gray-light: #f4f6f9;
+    --bss-text-muted: #6b7994;
+    --bss-success: #2e844a;
+
+    /* Tier: Caution (30s) */
+    --bss-caution-bg: #fff8e1;
+    --bss-caution-border: #f9a825;
+    --bss-caution-text: #e65100;
+
+    /* Tier: Alert (60s) */
+    --bss-alert-bg: #fce4ec;
+    --bss-alert-border: #e53935;
+    --bss-alert-text: #c62828;
+
+    /* Tier: Critical (90s) */
+    --bss-critical-bg: #d32f2f;
+    --bss-critical-border: #b71c1c;
+    --bss-critical-text: #ffffff;
+}
+
+/* ── Container States ─────────────────────────────────────────────── */
+.hold-container {
+    border-radius: 6px;
+    overflow: hidden;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    border: 1px solid #d8dde6;
+    background: var(--bss-white);
+    min-width: 220px;
+}
+
+.hold-container--idle {
+    border-color: #d8dde6;
+}
+
+.hold-container--active {
+    border-color: var(--bss-navy);
+    box-shadow: 0 0 0 1px var(--bss-navy);
+}
+
+.hold-container--caution {
+    border-color: var(--bss-caution-border);
+    box-shadow: 0 0 0 1px var(--bss-caution-border);
+    animation: pulse-caution 2.5s infinite;
+}
+
+.hold-container--alert {
+    border-color: var(--bss-alert-border);
+    box-shadow: 0 0 0 1px var(--bss-alert-border);
+    animation: pulse-alert 2s infinite;
+}
+
+.hold-container--critical {
+    border-color: var(--bss-critical-border);
+    background: var(--bss-critical-bg);
+    box-shadow: 0 0 0 2px var(--bss-critical-border);
+    animation: pulse-critical 1s infinite;
+}
+
+@keyframes pulse-caution {
+    0%   { box-shadow: 0 0 0 0 rgba(249, 168, 37, 0.35); }
+    70%  { box-shadow: 0 0 0 6px rgba(249, 168, 37, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(249, 168, 37, 0); }
+}
+
+@keyframes pulse-alert {
+    0%   { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.35); }
+    70%  { box-shadow: 0 0 0 8px rgba(229, 57, 53, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0); }
+}
+
+@keyframes pulse-critical {
+    0%   { box-shadow: 0 0 0 0 rgba(183, 28, 28, 0.5); }
+    50%  { box-shadow: 0 0 0 10px rgba(183, 28, 28, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(183, 28, 28, 0); }
+}
+
+/* ── b+s Header ───────────────────────────────────────────────────── */
+.bss-header {
+    background: linear-gradient(135deg, var(--bss-navy) 0%, var(--bss-navy-light) 100%);
+    color: var(--bss-white);
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hold-container--critical .bss-header {
+    background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%);
+}
+
+.bss-title {
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+/* ── Timer Body ───────────────────────────────────────────────────── */
+.timer-body {
+    padding: 12px 16px;
+    text-align: center;
+}
+
+.status-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--bss-text-muted);
+    margin: 0 0 4px 0;
+    font-weight: 600;
+}
+
+.hold-container--active .status-label {
+    color: var(--bss-navy);
+}
+
+.hold-container--caution .status-label {
+    color: var(--bss-caution-text);
+}
+
+.hold-container--alert .status-label {
+    color: var(--bss-alert-text);
+}
+
+.hold-container--critical .status-label {
+    color: var(--bss-critical-text);
+}
+
+.timer-display {
+    font-size: 32px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 2px;
+    margin: 0;
+    color: var(--bss-navy);
+    line-height: 1.2;
+}
+
+.hold-container--caution .timer-display {
+    color: var(--bss-caution-text);
+}
+
+.hold-container--alert .timer-display {
+    color: var(--bss-alert-text);
+}
+
+.hold-container--critical .timer-display {
+    color: var(--bss-critical-text);
+    font-size: 36px;
+}
+
+/* ── Tiered Threshold Alerts ─────────────────────────────────────── */
+.threshold-alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.threshold-alert--caution {
+    background: var(--bss-caution-bg);
+    color: var(--bss-caution-text);
+}
+
+.threshold-alert--alert {
+    background: var(--bss-alert-bg);
+    color: var(--bss-alert-text);
+}
+
+.threshold-alert--critical {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--bss-critical-text);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.caution-icon {
+    --sds-c-icon-color-foreground-default: var(--bss-caution-text);
+    flex-shrink: 0;
+}
+
+.alert-icon {
+    --sds-c-icon-color-foreground-default: var(--bss-alert-text);
+    flex-shrink: 0;
+}
+
+.critical-icon {
+    --sds-c-icon-color-foreground-default: var(--bss-critical-text);
+    flex-shrink: 0;
+}
+
+/* ── Timer Label ──────────────────────────────────────────────────── */
+.timer-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--bss-text-muted);
+    margin: 4px 0 2px 0;
+    font-weight: 500;
+}
+
+.hold-container--critical .timer-label {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* ── Total Hold Row ──────────────────────────────────────────────── */
+.total-hold-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 6px 12px;
+    background: var(--bss-gray-light);
+    border-radius: 4px;
+}
+
+.hold-container--critical .total-hold-row {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.total-hold-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--bss-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hold-container--critical .total-hold-label {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.total-hold-value {
+    font-size: 16px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--bss-navy);
+    letter-spacing: 1px;
+}
+
+.hold-container--critical .total-hold-value {
+    color: var(--bss-critical-text);
+}
+
+.hold-count-label {
+    font-size: 10px;
+    color: var(--bss-text-muted);
+    margin: 4px 0 0 0;
+}
+
+.hold-container--critical .hold-count-label {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Idle Text ────────────────────────────────────────────────────── */
+.idle-text {
+    font-size: 12px;
+    color: var(--bss-text-muted);
+    margin: 8px 0 0 0;
+}
+
+/* ── b+s Footer ───────────────────────────────────────────────────── */
+.bss-footer {
+    background: var(--bss-gray-light);
+    padding: 4px 12px;
+    text-align: center;
+    font-size: 9px;
+    color: var(--bss-text-muted);
+    letter-spacing: 0.3px;
+    border-top: 1px solid #e5e8ee;
+}
+
+.hold-container--critical .bss-footer {
+    background: rgba(183, 28, 28, 0.8);
+    color: rgba(255, 255, 255, 0.6);
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.bss-footer-logo {
+    color: var(--bss-accent);
+    font-weight: 800;
+}
+
+.hold-container--critical .bss-footer-logo {
+    color: var(--bss-critical-text);
+}

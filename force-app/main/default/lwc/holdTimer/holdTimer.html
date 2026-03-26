@@ -1,0 +1,59 @@
+<template>
+    <div class={containerClass}>
+        <!-- b+s Brand Header -->
+        <div class="bss-header">
+            <span class="bss-title">Hold Timer</span>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="timer-body">
+            <p class="status-label">{statusLabel}</p>
+
+            <!-- Current hold segment (large, primary display) -->
+            <template lwc:if={isOnHold}>
+                <p class="timer-label">Current Hold</p>
+                <p class="timer-display">{currentSegmentDisplay}</p>
+            </template>
+
+            <template lwc:if={isCaution}>
+                <div class="threshold-alert threshold-alert--caution">
+                    <lightning-icon icon-name="utility:warning" alternative-text="Caution" size="xx-small" class="caution-icon"></lightning-icon>
+                    <span>Approaching hold limit</span>
+                </div>
+            </template>
+
+            <template lwc:if={isAlert}>
+                <div class="threshold-alert threshold-alert--alert">
+                    <lightning-icon icon-name="utility:error" alternative-text="Alert" size="xx-small" class="alert-icon"></lightning-icon>
+                    <span>Customer waiting too long!</span>
+                </div>
+            </template>
+
+            <template lwc:if={isCritical}>
+                <div class="threshold-alert threshold-alert--critical">
+                    <lightning-icon icon-name="utility:ban" alternative-text="Critical" size="xx-small" class="critical-icon"></lightning-icon>
+                    <span>IMMEDIATE ACTION REQUIRED</span>
+                </div>
+            </template>
+
+            <!-- Total cumulative hold (secondary display, always visible after first hold) -->
+            <template lwc:if={showTotalHold}>
+                <div class="total-hold-row">
+                    <span class="total-hold-label">Total Hold Time</span>
+                    <span class="total-hold-value">{totalHoldDisplay}</span>
+                </div>
+                <p class="hold-count-label">{holdCountLabel}</p>
+            </template>
+
+            <!-- Idle state -->
+            <template lwc:if={isIdle}>
+                <p class="idle-text">No hold activity</p>
+            </template>
+        </div>
+
+        <!-- b+s Footer -->
+        <div class="bss-footer">
+            <span>Powered by <span class="bss-footer-logo">b+s</span> Connects</span>
+        </div>
+    </div>
+</template>

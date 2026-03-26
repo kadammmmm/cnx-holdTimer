@@ -1,0 +1,19 @@
+# Salesforce CLI
+.sfdx/
+.sf/
+
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Backup/scratch files
+*.bak
+mostlyworking.js
