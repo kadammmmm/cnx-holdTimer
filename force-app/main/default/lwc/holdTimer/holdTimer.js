@@ -6,8 +6,8 @@ import {
     setUtilityHighlighted,
     setUtilityLabel,
     setUtilityIcon,
-    openUtility,
-    minimizeUtility
+    open,
+    minimize
 } from 'lightning/platformUtilityBarApi';
 
 const DEFAULT_LABEL = 'Hold Timer';
@@ -20,28 +20,8 @@ const TIER_CRITICAL = 90;  // Red sticky toast, fast pulse
 export default class HoldTimer extends LightningElement {
     cil;
 
-    // Utility Bar identity — resolved via @wire adapter
-    _utilityId = null;
-    _utilityReady = false;
-
-    @wire(EnclosingUtilityId)
-    wiredUtilityId(result) {
-        // Wire adapters can return { data, error } or just the value directly
-        if (result && result.error) {
-            console.warn('[holdTimer] EnclosingUtilityId wire error:', JSON.stringify(result.error));
-        } else if (result && result.data) {
-            this._utilityId = result.data;
-            this._utilityReady = true;
-            console.info('[holdTimer] Utility ID resolved via wire (data):', this._utilityId);
-        } else if (result && typeof result === 'string') {
-            this._utilityId = result;
-            this._utilityReady = true;
-            console.info('[holdTimer] Utility ID resolved via wire (string):', this._utilityId);
-        } else {
-            // Some wire adapters set the value directly on the property
-            console.info('[holdTimer] EnclosingUtilityId wire result:', JSON.stringify(result));
-        }
-    }
+    // Utility Bar identity — set directly by @wire adapter
+    @wire(EnclosingUtilityId) utilityId;
 
     // Reactive UI properties
     isOnHold = false;
@@ -110,7 +90,7 @@ export default class HoldTimer extends LightningElement {
 
         this.cil.initIntegration(() => {
             console.info('[holdTimer] b+s Connects Integration Library ready');
-            console.info('[holdTimer] Utility bar ready:', this._utilityReady, '| ID:', this._utilityId);
+            console.info('[holdTimer] Utility bar ID:', this.utilityId);
 
             this.cil.onWorkitemConnect((data) => {
                 if (this.isVoiceChannel(data)) this.captureWorkitemInfo(data);
@@ -182,39 +162,50 @@ export default class HoldTimer extends LightningElement {
 
     async openUtilityPanel() {
         try {
-            if (this._utilityId) {
-                await openUtility(this._utilityId);
+            if (this.utilityId) {
+                await open(this.utilityId, { autoFocus: true });
                 console.info('[holdTimer] Utility panel opened');
             }
         } catch (err) {
-            console.warn('[holdTimer] openUtility failed:', err);
+            console.warn('[holdTimer] open failed:', err);
+        }
+    }
+
+    async minimizeUtilityPanel() {
+        try {
+            if (this.utilityId) {
+                await minimize(this.utilityId);
+                console.info('[holdTimer] Utility panel minimized');
+            }
+        } catch (err) {
+            console.warn('[holdTimer] minimize failed:', err);
         }
     }
 
     async highlightUtility() {
         try {
-            if (this._utilityId) {
-                await setUtilityHighlighted(this._utilityId, { highlighted: true });
+            if (this.utilityId) {
+                await setUtilityHighlighted(this.utilityId, { highlighted: true });
             }
         } catch (err) {
-            console.warn('[holdTimer] Utility highlight failed:', err);
+            console.warn('[holdTimer] setUtilityHighlighted failed:', err);
         }
     }
 
     async unhighlightUtility() {
         try {
-            if (this._utilityId) {
-                await setUtilityHighlighted(this._utilityId, { highlighted: false });
+            if (this.utilityId) {
+                await setUtilityHighlighted(this.utilityId, { highlighted: false });
             }
         } catch (err) {
-            console.warn('[holdTimer] Utility unhighlight failed:', err);
+            console.warn('[holdTimer] setUtilityHighlighted failed:', err);
         }
     }
 
     async updateUtilityLabel(label) {
         try {
-            if (this._utilityId) {
-                await setUtilityLabel(this._utilityId, { label });
+            if (this.utilityId) {
+                await setUtilityLabel(this.utilityId, { label });
             }
         } catch (err) {
             console.warn('[holdTimer] setUtilityLabel failed:', err);
@@ -223,8 +214,8 @@ export default class HoldTimer extends LightningElement {
 
     async updateUtilityIcon(icon) {
         try {
-            if (this._utilityId) {
-                await setUtilityIcon(this._utilityId, { icon });
+            if (this.utilityId) {
+                await setUtilityIcon(this.utilityId, { icon });
             }
         } catch (err) {
             console.warn('[holdTimer] setUtilityIcon failed:', err);
@@ -290,7 +281,7 @@ export default class HoldTimer extends LightningElement {
         this.holdStartTime = Date.now();
         this.holdCount += 1;
 
-        console.info('[holdTimer] startHoldTimer — utilityReady:', this._utilityReady, '| utilityId:', this._utilityId);
+        console.info('[holdTimer] startHoldTimer — utilityId:', this.utilityId);
 
         // Utility bar updates (gracefully skipped if not in utility bar)
         this.openUtilityPanel();
@@ -331,6 +322,7 @@ export default class HoldTimer extends LightningElement {
         }
 
         this.unhighlightUtility();
+        this.minimizeUtilityPanel();
         this.totalHoldDisplay = this.formatDuration(this.cumulativeHoldSeconds);
         this.updateUtilityIcon('utility:clock');
         this.updateUtilityLabel(

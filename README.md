@@ -10,7 +10,9 @@ This Lightning Web Component tracks customer hold time during voice calls, displ
 - **Total Hold Time** — cumulative across all hold segments for the call
 - **Hold Count** — tracks how many times the customer was placed on hold
 - **Tiered Warnings** — escalating alerts at 30s (caution), 60s (alert), 90s (critical)
-- **Utility Bar Integration** — highlight, label, and icon updates on the utility bar tab
+- **Auto-Open / Auto-Close** — utility bar panel opens automatically on hold, minimizes on resume
+- **Live Utility Bar Label** — real-time countdown displayed in the utility bar tab (visible even when panel is collapsed)
+- **Utility Bar Highlight** — tab highlights when hold threshold is exceeded
 - **b+s Sync** — scaffolding for `updateWorkitemData` to write hold duration (not active by default)
 
 ## Prerequisites
@@ -172,14 +174,21 @@ These are not currently admin-configurable and require a code change + redeploy.
 
 1. Open the Service Console app
 2. Accept an inbound/outbound voice call via Omni-Channel
-3. Place the caller on hold — the timer starts and the panel displays "Customer on Hold"
+3. Place the caller on hold:
+   - The utility bar panel **opens automatically** and displays "Customer on Hold"
+   - The utility bar tab label shows a live countdown: `Hold Timer  ⏱ 00:05`
+   - The tab icon changes to a pause icon
 4. Observe the current hold timer counting up
 5. At **30s**: amber border, orange toast ("Hold Approaching Limit")
 6. At **60s**: red border + pulse, red toast ("Customer Waiting Too Long!")
 7. At **90s**: full red panel, sticky red toast ("HOLD TIME CRITICAL")
-8. Resume the call — current hold resets, total hold time persists, tier resets
-9. Place on hold again — current hold restarts from 00:00, total continues accumulating
-10. End the call (or enter Wrapup) — timer resets to idle
+8. Resume the call:
+   - The utility bar panel **minimizes automatically**
+   - The tab label shows the total: `Hold Timer  ✓ Total: 00:34`
+   - The tab icon returns to clock
+   - Current hold resets, total hold time persists, tier resets
+9. Place on hold again — panel re-opens, current hold restarts from 00:00, total continues accumulating
+10. End the call (or enter Wrapup) — timer resets to idle, panel minimizes
 
 ## Troubleshooting
 
@@ -190,6 +199,7 @@ These are not currently admin-configurable and require a code change + redeploy.
 | Deploy fails with auth error | Re-authorize: `sf org login web --alias my-org` |
 | Component not visible in Utility Items | Ensure the deploy succeeded and search for "b+s Hold Timer" (not "holdTimer") |
 | Timer doesn't start on hold | Verify **Start Automatically** is enabled in the Utility Item config |
+| Panel doesn't auto-open | Check console for `[holdTimer] Utility panel opened` — if missing, the `EnclosingUtilityId` wire may not have resolved |
 | No b+s events firing | Confirm the `cnxscv` managed package is installed and the agent is using Omni-Channel with a voice channel |
 
 ## Component Files
